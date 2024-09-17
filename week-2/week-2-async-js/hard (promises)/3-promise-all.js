@@ -35,6 +35,8 @@ function calculateTime(t1, t2, t3) {
     return endTime - startTime
    })
 }
-// calculateTime(1,2,3)
+calculateTime(1, 2, 3).then((timeTaken)=>{
+    console.log("Total time taken", timeTaken/1000)
+   })
 
 module.exports = calculateTime;
