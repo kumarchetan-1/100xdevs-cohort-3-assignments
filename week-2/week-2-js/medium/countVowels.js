@@ -6,7 +6,20 @@
 */
 
 function countVowels(str) {
-    // Your code here
+  const normalisedStr = str.replace(/\s+/g, "").toLowerCase()
+  const strChars = normalisedStr.split("")
+  let noOfVowels = 0
+  const vowels = ["a", "e", "i", "o", "u"]
+  strChars.forEach(char => {
+    if (vowels.includes(char)) {
+      noOfVowels++
+      console.log(char)
+    }
+  });
+  return noOfVowels
 }
+
+const noOfVowels = countVowels("predomInant")
+console.log(noOfVowels)
 
 module.exports = countVowels;
