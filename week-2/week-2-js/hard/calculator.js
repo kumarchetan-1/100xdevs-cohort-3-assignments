@@ -16,6 +16,68 @@
   Once you've implemented the logic, test your code by running
 */
 
-class Calculator {}
+class Calculator {
+  constructor() {
+    this.result = 0
+  }
+
+  add(num) {
+    this.result += num;
+    return this
+  }
+
+  subtract(num) {
+    this.result -= num;
+    return this
+  }
+
+  multiply(num) {
+    this.result = this.result * num;
+    return this
+  }
+
+  divide(num) {
+    if (num === 0) {
+      throw new Error("Division by zero is not allowed.");
+    } else {
+      this.result = this.result / num;
+    }
+    return this
+  }
+
+  clear(num) {
+    this.result = 0;
+    return this
+  }
+
+  getResult(num) {
+    return this.result
+  }
+
+  calculate(str) {
+    try {
+      const normalisedExp = str.replace(/\s+/g, "")
+      const validChars = "0123456789+-/*()."
+      for (const char of normalisedExp) {
+        if (!validChars.includes(char)) {
+          throw new Error("Invalid characters in expression");
+        }
+      }
+      this.result = eval(normalisedExp)
+      if (!isFinite(this.result) || isNaN(this.result)) {
+        throw new Error("Invalid Mathematical Expression");
+      }
+      console.log(this.result)
+
+      return this.result
+    } catch (error) {
+      throw new Error(`Error in calculating the expression ${error.message}`);
+    }
+  }
+}
+
+const newExp = new Calculator()
+newExp.calculate("(9 +  4 -2*5+3 )/10  ")
+console.log(newExp)
 
 module.exports = Calculator;
