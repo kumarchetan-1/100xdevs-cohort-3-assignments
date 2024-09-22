@@ -9,31 +9,33 @@ quizData.forEach((questionObj, index) => {
     const form = document.createElement("form")
     const h3 = document.createElement("h3")
     const button = document.createElement("button")
+
     button.type = "submit"
     button.innerHTML = "Submit"
+
     form.id = `qn-${index}`
-    h3.innerHTML = questionObj.question
+    h3.innerHTML = `${index + 1}. ${questionObj.question}`
+
     const radiosHolder = []
     const labelHolder = []
     const radiosVal = ["a", "b", "c", "d"]
+
     for (let i = 0; i < 4; i++) {
         const radio = document.createElement("input")
         const label = document.createElement("label")
+
         radio.type = 'radio'
+        radio.required = "true"
         radio.id = `opt-${index}-${i + 1}`
         radio.name = `question${index}`
         radio.value = radiosVal[i]
+
         label.htmlFor = radio.id
+        label.innerHTML = questionObj[radiosVal[i]]
+
         labelHolder.push(label)
         radiosHolder.push(radio)
     }
-
-    // Injecting the values of all options to the labels of radios
-    // console.log(radiosHolder)
-    labelHolder.forEach((label, index) => {
-        label.innerHTML = questionObj[radiosVal[index]]
-        //   console.log(label.innerHTML)
-    })
 
     // Appending of all elements to the form
     form.appendChild(h3)
@@ -46,45 +48,96 @@ quizData.forEach((questionObj, index) => {
     // console.log(form)
     form.appendChild(button)
     quizContainer.appendChild(form)
-    // const options = [questionObj.a, questionObj.b, questionObj.c, questionObj.d]
-    const correctAns = questionObj.correct
 
 })
 
+// Add a final summary element after all forms
+const summaryDiv = document.createElement("div")
+summaryDiv.id = "summary"
+summaryDiv.style.display = "none"
+summaryDiv.innerHTML = "<h3> Quiz Summary</h3> <p id='result'> </p> <button id='reload'> Reload </button>"
+quizContainer.appendChild(summaryDiv)
 
 const questionsList = document.querySelectorAll("form")
-
-questionsList.forEach((ques) => {
-
-    ques.addEventListener("submit", (e) => {
-        e.preventDefault()
-        const radios = e.target.elements
-        //  console.log(radios)
-        let selectedValue = ''
-        for (let i = 0; i < radios.length; i++) {
-            if (radios[i].checked) {
-                selectedValue = radios[i].value;
-                showNextForm()
-                break;
-            }
-        }
-        console.log(selectedValue)
-    })
-})
+const resultParagraph = document.getElementById("result")
 
 let currentFormIndex = 0
+let totCorrectAns = 0
 
+// Show the first form initially
+if (questionsList.length > 0) {
+    questionsList[0].classList.add('active');
+}
+
+// Show summary after last question
+function showSummary() {
+    summaryDiv.style.display = "block"
+    resultParagraph.innerHTML = `You answered ${totCorrectAns} out of ${quizData.length} questions correctly.`
+}
+
+
+// function to show next question or summary in case of last question
 function showNextForm() {
     if (currentFormIndex < questionsList.length - 1) {
         questionsList[currentFormIndex].classList.remove("active")
         currentFormIndex++
         questionsList[currentFormIndex].classList.add("active")
     } else {
-        console.log("You have reached the last form")
+        questionsList[currentFormIndex].classList.remove("active")
+        showSummary()
     }
 }
 
-// Show the first form initially
-if (questionsList.length > 0) {
-    questionsList[0].classList.add('active');
+questionsList.forEach((form, index) => {
+    form.addEventListener("submit", (e) => {
+        e.preventDefault()
+
+        const radios = e.target.elements
+        let selectedValue = ''
+        console.log(radios)
+        if (radios[4].innerHTML === "Submit") {
+        for (let i = 0; i < radios.length; i++) {
+            if (radios[i].checked) {
+                selectedValue = radios[i].value;
+                break;
+            }
+        }
+    }
+
+        if (selectedValue === quizData[index].correct) {
+            totCorrectAns++
+        }
+
+        // showNextForm()
+        showCorrectAns(quizData[index].correct)
+        // console.log(selectedValue)
+    })
+})
+
+const reloadBtn = document.getElementById("reload")
+
+reloadBtn.addEventListener("click", () => {
+    location.reload(true)
+})
+
+function showCorrectAns(correctAns) {
+    const currentForm = questionsList[currentFormIndex]
+    // alert(currentFormIndex)
+    const ansDiv = document.createElement("div")
+    ansDiv.id = "correctAnsDiv"
+    ansDiv.innerHTML = `<p>The Correct ans is "<b>${correctAns}</b>"</p>`
+
+    const button = currentForm.querySelector('button')
+
+    currentForm.insertBefore(ansDiv, button)
+    button.innerHTML = "Next Question"
+    button.type = "button" 
+
+    button.onclick = function () {
+        showNextForm()
+        // console.log("onclick working on buttons")
+        ansDiv.remove();
+        button.innerHTML = "Submit"
+        button.type = "submit" 
+    }
 }
