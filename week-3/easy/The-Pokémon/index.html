@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokemon</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <form id="pokemon-form">
+            <label for="num">Number of Pokemon:</label>
+            <input type="number" id="num" min="1"  required>
+            <select id="category">
+                <option value="1">Grass</option>
+                <option value="4">Fire</option>
+                <option value="7">Water</option>
+            </select>
+           <button type="submit">Get Pokemon</button>
+        </form>
+
+        <div id="pokemon-container"></div>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
