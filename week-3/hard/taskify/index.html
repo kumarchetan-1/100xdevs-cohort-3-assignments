@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taskify: Task Manager</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #000000, #1a237e);
+            color: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            display: flex;
+            justify-content: space-around;
+            padding: 20px;
+            gap: 20px;
+            align-items: flex-start;
+        }
+
+        .column {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            width: 300px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        h1{
+            text-align: center;
+            margin: 50px 0 30px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #fff;
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px rgb(0 0 0 / 50%);
+        }
+
+        .todo-cards {
+            min-height: 200px;
+        }
+
+        .todo-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .todo-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .todo-card h3 {
+            margin: 0 0 10px;
+            color: #ff9800;
+        }
+
+        .todo-card p {
+            margin: 0 0 10px;
+            font-size: 0.9em;
+        }
+
+        .bottom-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.8em;
+        }
+
+        .priority {
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .todo-form * {
+            box-sizing: border-box;
+        }
+
+        .priority.low { background-color: #4caf50; }
+        .priority.medium { background-color: #ff9800; }
+        .priority.urgent { background-color: #f44336; }
+
+        time {
+            color: #b0bec5;
+        }
+
+        .add-new {
+            width: 100%;
+            padding: 10px;
+            background: #7e57c2;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .add-new:hover {
+            background: #673ab7;
+        }
+
+        .todo-form {
+            display: none;
+            margin-top: 15px;
+        }
+
+        .todo-form label {
+            display: block;
+            margin-bottom: 5px;
+            color: #b0bec5;
+        }
+
+        .todo-form input,
+        .todo-form select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: 1px solid #7e57c2;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .todo-form button {
+            width: 100%;
+            padding: 10px;
+            background: #ff9800;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .todo-form button:hover {
+            background: #f57c00;
+        }
+
+        @media (max-width: 1200px) {
+            .container {
+                flex-wrap: wrap;
+            }
+            .column {
+                width: calc(50% - 20px);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .column {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="stars"></div>
+    <h1>Taskify - Task Manager</h1>
+    <div class="container">
+        <div class="column column1">
+            <h2>To Do</h2>
+            <div class="todo-cards"></div>
+            <button class="add-new">Add new</button>
+            <form class="todo-form add-todo">
+                <label for="title1">Title</label>
+                <input type="text" name="title" id="title1" required>
+                <label for="description1">Description</label>
+                <input type="text" id="description1" required>
+                <label for="priority1">Select Priority</label>
+                <select name="priority" id="priority1" required>
+                    <option value="low">Low</option>
+                    <option value="medium">Medium</option>
+                    <option value="urgent">Urgent</option>
+                </select>
+                <label for="date-of-completion1">Date of completion</label>
+                <input type="date" name="date of completion" id="date-of-completion1" required>
+                <button type="submit">Add todo</button>
+            </form>
+        </div>
+        <div class="column column2">
+            <h2>In Progress</h2>
+            <div class="todo-cards"></div>
+            <button class="add-new">Add new</button>
+            <form class="todo-form add-todo">
+                <label for="title2">Title</label>
+                <input type="text" name="title" id="title2" required>
+                <label for="description2">Description</label>
+                <input type="text" id="description2" required>
+                <label for="priority2">Select Priority</label>
+                <select name="priority" id="priority2" required>
+                    <option value="low">Low</option>
+                    <option value="medium">Medium</option>
+                    <option value="urgent">Urgent</option>
+                </select>
+                <label for="date-of-completion2">Date of completion</label>
+                <input type="date" name="date of completion" id="date-of-completion2" required>
+                <button type="submit">Add todo</button>
+            </form>
+        </div>
+        <div class="column column3">
+            <h2>Under Review</h2>
+            <div class="todo-cards"></div>
+            <button class="add-new">Add new</button>
+            <form class="todo-form add-todo">
+                <label for="title3">Title</label>
+                <input type="text" name="title" id="title3" required>
+                <label for="description3">Description</label>
+                <input type="text" id="description3" required>
+                <label for="priority3">Select Priority</label>
+                <select name="priority" id="priority3" required>
+                    <option value="low">Low</option>
+                    <option value="medium">Medium</option>
+                    <option value="urgent">Urgent</option>
+                </select>
+                <label for="date-of-completion3">Date of completion</label>
+                <input type="date" name="date of completion" id="date-of-completion3" required>
+                <button type="submit">Add todo</button>
+            </form>
+        </div>
+        <div class="column column4">
+            <h2>Finished</h2>
+            <div class="todo-cards"></div>
+            <button class="add-new">Add new</button>
+            <form class="todo-form add-todo">
+                <label for="title4">Title</label>
+                <input type="text" name="title" id="title4" required>
+                <label for="description4">Description</label>
+                <input type="text" id="description4" required>
+                <label for="priority4">Select Priority</label>
+                <select name="priority" id="priority4" required>
+                    <option value="low">Low</option>
+                    <option value="medium">Medium</option>
+                    <option value="urgent">Urgent</option>
+                </select>
+                <label for="date-of-completion4">Date of completion</label>
+                <input type="date" name="date of completion" id="date-of-completion4" required>
+                <button type="submit">Add todo</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Create starry background
+        function createStars() {
+            const stars = document.querySelector('.stars');
+            for (let i = 0; i < 300; i++) {
+                const star = document.createElement('div');
+                star.style.position = 'absolute';
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.top = `${Math.random() * 100}%`;
+                star.style.width = `${Math.random() * 3}px`;
+                star.style.height = star.style.width;
+                star.style.backgroundColor = 'white';
+                star.style.borderRadius = '50%';
+                star.style.opacity = Math.random();
+                star.style.animation = `twinkle ${Math.random() * 5 + 5}s infinite`;
+                stars.appendChild(star);
+            }
+        }
+
+        createStars();
+
+        const addBtns = document.querySelectorAll(".add-new");
+        addBtns.forEach((btn) => {
+            btn.addEventListener("click", () => {
+                btn.nextElementSibling.style.display = "block";
+            });
+        });
+
+        function getTimeAgo(date) {
+            const seconds = Math.floor((new Date() - date) / 1000);
+
+            let interval = seconds / (365*24*60*60);
+            if (interval > 1) return Math.floor(interval) + " years ago";
+
+            interval = seconds / (30*24*60*60);
+            if (interval > 1) return Math.floor(interval) + " months ago";
+
+            interval = seconds / (24*60*60);
+            if (interval > 1) return Math.floor(interval) + " days ago";
+
+            interval = seconds / 3600;
+            if (interval > 1) return Math.floor(interval) + " hours ago";
+
+            interval = seconds / 60;
+            if (interval > 1) return Math.floor(interval) + " minutes ago";
+            
+            return Math.floor(seconds) + " seconds ago";
+        }
+
+        function updateTimeAgo() {
+            document.querySelectorAll('.time-ago').forEach(timeElement => {
+                const timestamp = parseInt(timeElement.getAttribute('data-timestamp'));
+                timeElement.textContent = getTimeAgo(new Date(timestamp));
+            });
+        }
+
+        setInterval(updateTimeAgo, 60000); // Update every minute
+
+        const formSubmitted = document.querySelectorAll("form.todo-form");
+        formSubmitted.forEach((form) => {
+            form.addEventListener("submit", (e) => {
+                e.preventDefault();
+                const title = e.target.querySelector("[name='title']").value;
+                const description = e.target.querySelector("[id^='description']").value;
+                const priority = e.target.querySelector("[name='priority']").value;
+                const dateOfCompletion = e.target.querySelector("[name='date of completion']").value;
+                const creationTime = new Date().getTime();
+
+                const todoCard = document.createElement("div");
+                todoCard.classList.add("todo-card");
+                todoCard.draggable = true;
+
+                todoCard.innerHTML = `
+                    <h3>${title}</h3>
+                    <p>${description}</p>
+                    <div class="bottom-row">
+                        <div class="bottom-left-column">
+                            <button class="priority ${priority}">${priority}</button>
+                            <time datetime="${dateOfCompletion}">${dateOfCompletion}</time>
+                        </div>
+                        <div class="bottom-right-column">
+                           <p class="time-ago" data-timestamp="${creationTime}"></p>
+                        </div>
+                    </div>
+                `;
+
+                const todoCards = e.target.closest('.column').querySelector(".todo-cards");
+                todoCards.appendChild(todoCard);
+
+                e.target.reset();
+                e.target.style.display = "none";
+            });
+        });
+
+        // Add drag and drop functionality
+        const columns = document.querySelectorAll('.column');
+
+        columns.forEach(column => {
+            column.addEventListener('dragover', e => {
+                e.preventDefault();
+                const afterElement = getDragAfterElement(column, e.clientY);
+                const draggable = document.querySelector('.dragging');
+                if (afterElement == null) {
+                    column.querySelector('.todo-cards').appendChild(draggable);
+                } else {
+                    column.querySelector('.todo-cards').insertBefore(draggable, afterElement);
+                }
+            });
+        });
+
+        document.addEventListener('dragstart', e => {
+            if (e.target.classList.contains('todo-card')) {
+                e.target.classList.add('dragging');
+            }
+        });
+
+        document.addEventListener('dragend', e => {
+            if (e.target.classList.contains('todo-card')) {
+                e.target.classList.remove('dragging');
+            }
+        });
+
+        function getDragAfterElement(column, y) {
+            const draggableElements = [...column.querySelectorAll('.todo-card:not(.dragging)')];
+
+            return draggableElements.reduce((closest, child) => {
+                const box = child.getBoundingClientRect();
+                const offset = y - box.top - box.height / 2;
+                if (offset < 0 && offset > closest.offset) {
+                    return { offset: offset, element: child };
+                } else {
+                    return closest;
+                }
+            }, { offset: Number.NEGATIVE_INFINITY }).element;
+        }
+
+        // Add shooting star animation
+        function createShootingStar() {
+            const shootingStar = document.createElement('div');
+            shootingStar.style.position = 'fixed';
+            shootingStar.style.left = '-10px';
+            shootingStar.style.top = `${Math.random() * 100}%`;
+            shootingStar.style.width = '4px';
+            shootingStar.style.height = '4px';
+            shootingStar.style.backgroundColor = 'white';
+            shootingStar.style.borderRadius = '50%';
+            shootingStar.style.boxShadow = '0 0 10px 2px white';
+            shootingStar.style.animation = 'shootingStar 2s linear';
+            document.body.appendChild(shootingStar);
+
+            shootingStar.addEventListener('animationend', () => {
+                shootingStar.remove();
+            });
+        }
+
+        setInterval(createShootingStar, 5000);
+
+        // Add keyframe animation for shooting star
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes twinkle {
+                0%, 100% { opacity: 1; }
+                50% { opacity: 0.3; }
+            }
+            @keyframes shootingStar {
+                0% { transform: translateX(0) translateY(0); opacity: 1; }
+                100% { transform: translateX(calc(100vw + 10px)) translateY(100px); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
