@@ -7,13 +7,13 @@ mongoose.connect("")
 .then(() => console.log("Database connected!"))
 .catch(error => console.log(`Error in connecting Database: ${error}`))
 
-const UserSchema = new Schema({
+const userSchema = new Schema({
     email: { type: String, unique: true},
     password: String,
     name: String
 }, { timestamps: true })
 
-const TodoSchema = new Schema({
+const todoSchema = new Schema({
     title: String,
     description: String,
     status: Boolean,
@@ -25,10 +25,9 @@ const TodoSchema = new Schema({
     userId: { type: ObjectId, ref: "user"}
 })
 
-const User = mongoose.model('User', UserSchema);
-const Todo = mongoose.model('Todo', TodoSchema);
+const userModel = mongoose.model("user", userSchema)
+const todoModel = mongoose.model("todo", todoSchema)
 
 module.exports = {
-    User,
-    Todo
+ userModel, todoModel
 }
