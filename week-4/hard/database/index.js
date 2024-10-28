@@ -1,9 +1,12 @@
 const mongoose = require("mongoose")
+const dotenv = require("dotenv")
+dotenv.config();
+const MongoDbString = process.env.MONGODB_STRING
 
 const Schema = mongoose.Schema
 const ObjectId = mongoose.ObjectId
 
-mongoose.connect("")
+mongoose.connect(MongoDbString)
 .then(() => console.log("Database connected!"))
 .catch(error => console.log(`Error in connecting Database: ${error}`))
 
@@ -12,7 +15,7 @@ const UserSchema = new Schema({
     password: String,
     name: String
 }, { timestamps: true })
-
+ 
 const TodoSchema = new Schema({
     title: String,
     description: String,

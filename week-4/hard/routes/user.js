@@ -17,7 +17,7 @@ const userSchema = z.object({
                .regex(/[a-z]/, { message: "Please give atleast one smallcase character"})
                .regex(/[A-Z]/, { message: "Please give atleast one uppercase character"})
                .regex(/\d/, { message: "Please give atleast one digit"})
-               .regex(/[!@#$%^&*()_-+=',.\/]/, { message: "Please give atleast one special character"})
+               .regex(/[!@#$%^&*()_\-+=',.\/]/, { message: "Please give atleast one special character"})
                .regex(/^\S*$/, { message: "Please don't use whitespace in between the password"})
 })
 
@@ -64,7 +64,7 @@ userRouter.post('/login', async (req, res) => {
            return res.status(403).json({ message: "Incorrect credentials"})
         }
 
-       const token = jwt.sign({ id: user._id }, JWT_USER_SECRET)
+       const token = jwt.sign({ id : user._id.toString() }, JWT_USER_SECRET)    
         res.status(200).json({ token })
     } catch (error) {
         res.status(500).json({ message: "Internal server error"})
@@ -75,16 +75,16 @@ userRouter.get('/todos', userMiddleware, async (req, res) => {
     const userId = req.userId
 
     try {
-        const courses = await Todo.find({ 
-            userId
-        })
-        res.status(200).json({
-            courses
-        })
+        const todos = await Todo.find({ userId })
+        if (todos) {
+            res.status(200).json({ todos })
+        } else {
+            res.json({ message: "You don't have added any todos yet."})
+        }
     } catch (error) {
         res.status(500).json({
             message: "Unable to get todos",
-            error
+            error: error.message
         })
     }
 });
@@ -94,4 +94,6 @@ userRouter.post('/logout', userMiddleware, (req, res) => {
     res.json({ message: "You logged out successfully"})
 });
 
-module.exports = userRouter
+module.exports = {
+    userRouter
+}
