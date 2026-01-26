@@ -39,7 +39,7 @@ const userId = req.header('user-id')
 
 setInterval(() => {
   numberOfRequestsForUser = {};
-}, 1000)
+}, 3000)
 
 app.get('/user', function(req, res) {
   res.status(200).json({ name: 'john' });
